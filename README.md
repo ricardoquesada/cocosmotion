@@ -18,3 +18,9 @@ Sean Scally
 [github](http://github.com/anydiem)
 
 The fine folks at Cocos2d-iPhone and RubyMotion!
+
+## Discomfortingly Optimistic To-Do List
+
+* Find a way to not have to move header files to root
+* Create CocoaPod
+
