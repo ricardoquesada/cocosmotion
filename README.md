@@ -14,9 +14,7 @@ Enjoy!
 ## WHO IS RESPONSIBLE FOR THIS ATROCITY?
 
 Sean Scally
-
 [twitter](http://twitter.com/s_scally)
-
 [github](http://github.com/anydiem)
 
 The fine folks at Cocos2d-iPhone and RubyMotion!
