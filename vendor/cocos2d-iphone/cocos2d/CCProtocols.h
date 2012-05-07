@@ -123,10 +123,9 @@
 /** Called by CCDirector when the porjection is updated, and "custom" projection is used */
 -(void) updateProjection;
 
-#ifdef __CC_PLATFORM_IOS
+
 /** Returns a Boolean value indicating whether the CCDirector supports the specified orientation. Default value is YES (supports all possible orientations) */
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
 
-#endif // __CC_PLATFORM_IOS
 
 @end

@@ -135,7 +135,6 @@ default gl blend src function. Compatible with premultiplied alpha images.
  @since v0.99.4
  */
 
-#ifdef __CC_PLATFORM_IOS
 
 #define CC_DIRECTOR_INIT()																		\
 do	{																							\
@@ -163,24 +162,6 @@ do	{																							\
 } while(0)
 
 
-#elif __CC_PLATFORM_MAC
-
-#define CC_DIRECTOR_INIT(__WINSIZE__)															\
-do	{																							\
-	NSRect frameRect = NSMakeRect(0, 0, (__WINSIZE__).width, (__WINSIZE__).height);				\
-	window_ = [[CCWindow alloc] initWithFrame:frameRect fullscreen:NO];						\
-	glView_ = [[CCGLView alloc] initWithFrame:frameRect shareContext:nil];						\
-	[self.window setContentView:self.glView];													\
-	director_ = (CCDirectorMac*) [CCDirector sharedDirector];									\
-	[director_ setDisplayStats:NO];																\
-	[director_ setView:self.glView];															\
-	[director_ setOriginalWinSize:__WINSIZE__];													\
-	[self.window makeMainWindow];																\
-	[self.window makeKeyAndOrderFront:self];													\
-	[self.window center];																		\
-} while(0)
-
-#endif
 
 /** @def CC_NODE_DRAW_SETUP
  Helpful macro that setups the GL server state, the correct GL program and sets the Model View Projection matrix

@@ -32,9 +32,9 @@
 #import <Foundation/Foundation.h>
 #import "ccMacros.h"
 
-#ifdef __CC_PLATFORM_IOS
+
 #import <CoreGraphics/CGGeometry.h>	// CGPoint
-#endif
+
 
 #import "Platforms/CCGL.h"
 
@@ -316,7 +316,7 @@ typedef enum
 {
 	//! Unknonw resolution type
 	kCCResolutionUnknown,
-#ifdef __CC_PLATFORM_IOS
+
 	//! iPhone resolution type
 	kCCResolutioniPhone,
 	//! RetinaDisplay resolution type
@@ -326,13 +326,6 @@ typedef enum
 	//! iPad Retina Display resolution type
 	kCCResolutioniPadRetinaDisplay,
 	
-#elif defined(__CC_PLATFORM_MAC)
-	//! Mac resolution type
-	kCCResolutionMac,
-
-	//! Mac RetinaDisplay resolution type (???)
-	kCCResolutionMacRetinaDisplay,
-#endif // platform
 
 } ccResolutionType;
 

@@ -268,7 +268,6 @@
 										 fontName:fontName_
 										 fontSize:fontSize_  * CC_CONTENT_SCALE_FACTOR()];
 		
-#ifdef __CC_PLATFORM_IOS
 	// iPad ?
 	if( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ) {
 		if( CC_CONTENT_SCALE_FACTOR() == 2 )
@@ -284,7 +283,6 @@
 		else
 			[tex setResolutionType:kCCResolutioniPhone];
 	}
-#endif
 	
 	[self setTexture:tex];
 	[tex release];

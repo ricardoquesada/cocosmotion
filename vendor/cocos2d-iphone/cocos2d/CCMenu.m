@@ -83,11 +83,8 @@ enum {
 -(id) initWithArray:(NSArray *)arrayOfItems
 {
 	if( (self=[super init]) ) {
-#ifdef __CC_PLATFORM_IOS
+
 		self.isTouchEnabled = YES;
-#elif defined(__CC_PLATFORM_MAC)
-		self.isMouseEnabled = YES;
-#endif
 		enabled_ = YES;
 		
 		// by default, menu in the center of the screen
@@ -99,10 +96,10 @@ enum {
 		
 		// XXX: in v0.7, winSize should return the visible size
 		// XXX: so the bar calculation should be done there
-#ifdef __CC_PLATFORM_IOS
+
 		CGRect r = [[UIApplication sharedApplication] statusBarFrame];
 		s.height -= r.size.height;
-#endif
+
 		self.position = ccp(s.width/2, s.height/2);
 		
 		int z=0;
@@ -150,20 +147,14 @@ enum {
 
 -(void) setHandlerPriority:(NSInteger)newPriority
 {
-#ifdef __CC_PLATFORM_IOS
+
 	CCTouchDispatcher *dispatcher = [[CCDirector sharedDirector] touchDispatcher];
 	[dispatcher setPriority:newPriority forDelegate:self];
 
-#elif defined(__CC_PLATFORM_MAC)
-	CCEventDispatcher *dispatcher = [[CCDirector sharedDirector] eventDispatcher];
-	[dispatcher removeMouseDelegate:self];
-	[dispatcher addMouseDelegate:self priority:newPriority];
-#endif
 }
 
 #pragma mark Menu - Events Touches
 
-#ifdef __CC_PLATFORM_IOS
 -(void) registerWithTouchDispatcher
 {
 	CCDirector *director = [CCDirector sharedDirector];
@@ -244,87 +235,6 @@ enum {
 
 #pragma mark Menu - Events Mouse
 
-#elif defined(__CC_PLATFORM_MAC)
-
--(NSInteger) mouseDelegatePriority
-{
-	return kCCMenuHandlerPriority+1;
-}
-
--(CCMenuItem *) itemForMouseEvent: (NSEvent *) event
-{
-	CGPoint location = [[CCDirector sharedDirector] convertEventToGL:event];
-
-	CCMenuItem* item;
-	CCARRAY_FOREACH(children_, item){
-		// ignore invisible and disabled items: issue #779, #866
-		if ( [item visible] && [item isEnabled] ) {
-
-			CGPoint local = [item convertToNodeSpace:location];
-
-			CGRect r = [item rect];
-			r.origin = CGPointZero;
-
-			if( CGRectContainsPoint( r, local ) )
-				return item;
-		}
-	}
-	return nil;
-}
-
--(BOOL) ccMouseUp:(NSEvent *)event
-{
-	if( ! visible_ || ! enabled_)
-		return NO;
-
-	if(state_ == kCCMenuStateTrackingTouch) {
-		if( selectedItem_ ) {
-			[selectedItem_ unselected];
-			[selectedItem_ activate];
-		}
-		state_ = kCCMenuStateWaiting;
-
-		return YES;
-	}
-	return NO;
-}
-
--(BOOL) ccMouseDown:(NSEvent *)event
-{
-	if( ! visible_ || ! enabled_)
-		return NO;
-
-	selectedItem_ = [self itemForMouseEvent:event];
-	[selectedItem_ selected];
-
-	if( selectedItem_ ) {
-		state_ = kCCMenuStateTrackingTouch;
-		return YES;
-	}
-
-	return NO;
-}
-
--(BOOL) ccMouseDragged:(NSEvent *)event
-{
-	if( ! visible_ || ! enabled_)
-		return NO;
-
-	if(state_ == kCCMenuStateTrackingTouch) {
-		CCMenuItem *currentItem = [self itemForMouseEvent:event];
-
-		if (currentItem != selectedItem_) {
-			[selectedItem_ unselected];
-			selectedItem_ = currentItem;
-			[selectedItem_ selected];
-		}
-
-		return YES;
-	}
-	return NO;
-}
-
-#endif // Mac Mouse support
 
 #pragma mark Menu - Alignment
 -(void) alignItemsVertically

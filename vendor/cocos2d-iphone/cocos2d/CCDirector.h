@@ -57,11 +57,7 @@ typedef enum {
 @class CCActionManager;
 
 
-#ifdef __CC_PLATFORM_IOS
 #define CC_VIEWCONTROLLER UIViewController
-#elif defined(__CC_PLATFORM_MAC)
-#define CC_VIEWCONTROLLER NSObject
-#endif
 
 /**Class that creates and handle the main Window and manages how
 and when to execute the Scenes.

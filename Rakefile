@@ -13,5 +13,5 @@ Motion::Project::App.setup do |app|
   app.frameworks += ["OpenGLES", "OpenAL", "AVFoundation", "AudioToolbox", "QuartzCore"]
   app.libs << "/usr/lib/libz.dylib"
 
-  app.device_family = [:iphone]
+  app.interface_orientations = [:landscape_right]
 end

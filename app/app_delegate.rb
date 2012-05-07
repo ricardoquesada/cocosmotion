@@ -1,6 +1,5 @@
 class AppDelegate
   def application(application, didFinishLaunchingWithOptions:launchOptions)
-
     @window = UIWindow.alloc.initWithFrame UIScreen.mainScreen.bounds
     
     glView = CCGLView.viewWithFrame @window.bounds,
@@ -11,52 +10,61 @@ class AppDelegate
       multiSampling: false,
       numberOfSamples: 0
 
-    director = CCDirector.sharedDirector
-    director.wantsFullScreenLayout = true
-    director.displayStats = true
-    director.animationInterval = 1.0/60
-    director.view = glView
-    director.delegate = self
-    director.projection = KCCDirectorProjection2D
-    director.enableRetinaDisplay true
+    @director = CCDirector.sharedDirector
+    @director.wantsFullScreenLayout = true
+    @director.displayStats = true
+    @director.animationInterval = 1.0/60
+    @director.view = glView
+    @director.projection = KCCDirectorProjection2D
+    @director.enableRetinaDisplay true
+    @director.delegate = self
 
-    @navController = UINavigationController.alloc.initWithRootViewController director
-    @navController.navigationBarHidden = true
+    @nav_controller = UINavigationController.alloc.initWithRootViewController @director
+    @nav_controller.navigationBarHidden = true
 
-    @window.addSubview @navController.view
+    @window.addSubview @nav_controller.view
     @window.makeKeyAndVisible
 
     CCTexture2D.defaultAlphaPixelFormat = KCCTexture2DPixelFormat_RGBA8888
 
-    CCFileUtils.sharedFileUtils.setiPhoneRetinaDisplaySuffix("-hd")
-    CCFileUtils.sharedFileUtils.setiPadSuffix "-ipad"
-    CCFileUtils.sharedFileUtils.setiPadRetinaDisplaySuffix "-ipadhd"
+    file_utils = CCFileUtils.sharedFileUtils
+    file_utils.enableFallbackSuffixes = false
+    file_utils.setiPhoneRetinaDisplaySuffix "-hd"
+    file_utils.setiPadSuffix "-ipad"
+    file_utils.setiPadRetinaDisplaySuffix "-ipadhd"
 
     CCTexture2D.PVRImagesHavePremultipliedAlpha true
 
-    director.pushScene WorldLayer.scene
+    @director.pushScene WorldLayer.scene
     true
   end
-end
 
-class WorldLayer < CCLayer
-  def self.scene
-    scene = CCScene.node
-    layer = WorldLayer.node
-
-    scene.addChild layer
-    scene
+  def applicationWillResignActive(app)
+    @director.pause if @nav_controller.visibleViewController == @director
   end
 
-  def init
-    super
-
-    @label = CCLabelTTF.labelWithString "Hello RubyMotion from Cocos!", fontName: "Gill Sans", fontSize: 18
-    size = CCDirector.sharedDirector.winSize
-    @label.position = [size.width / 2, size.height / 2]
-    
-    self.addChild @label
-
-    self
+  def applicationDidBecomeActive(app)
+    @director.resume if @nav_controller.visibleViewController == @director
   end
+
+  def applicationDidEnterBackground(app)
+    @director.stopAnimation if @nav_controller.visibleViewController == @director
+  end
+
+  def applicationWillEnterForeground(app)
+    @director.startAnimation if @nav_controller.visibleViewController == @director
+  end
+
+  def applicationWillTerminate(app)
+    @director.end
+  end
+
+  def applicationDidReceiveMemoryWarning(app)
+    @director.purgeCachedData
+  end
+
+  def applicationSignificantTimeChange(app)
+    @director.setNextDeltaTimeZero true
+  end
+
 end

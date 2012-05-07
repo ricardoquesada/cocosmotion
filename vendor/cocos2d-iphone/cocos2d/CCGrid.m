@@ -102,14 +102,10 @@
 	unsigned long POTWide = ccNextPOT(s.width);
 	unsigned long POTHigh = ccNextPOT(s.height);
 
-#ifdef __CC_PLATFORM_IOS
 	CCGLView *glview = (CCGLView*)[[CCDirector sharedDirector] view];
 	NSString *pixelFormat = [glview pixelFormat];
 
 	CCTexture2DPixelFormat format = [pixelFormat isEqualToString: kEAGLColorFormatRGB565] ? kCCTexture2DPixelFormat_RGB565 : kCCTexture2DPixelFormat_RGBA8888;
-#elif defined(__CC_PLATFORM_MAC)
-	CCTexture2DPixelFormat format = kCCTexture2DPixelFormat_RGBA8888;
-#endif
 
 	int bpp = ( format == kCCTexture2DPixelFormat_RGB565 ? 2 : 4 );
 

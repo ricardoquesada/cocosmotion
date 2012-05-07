@@ -62,12 +62,7 @@
 
 		isTouchEnabled_ = NO;
 
-#ifdef __CC_PLATFORM_IOS
 		isAccelerometerEnabled_ = NO;
-#elif defined(__CC_PLATFORM_MAC)
-		isMouseEnabled_ = NO;
-		isKeyboardEnabled_ = NO;
-#endif
 	}
 
 	return self;
@@ -75,7 +70,6 @@
 
 #pragma mark Layer - Touch and Accelerometer related
 
-#ifdef __CC_PLATFORM_IOS
 -(void) registerWithTouchDispatcher
 {
 	CCDirector *director = [CCDirector sharedDirector];
@@ -120,111 +114,14 @@
 	}
 }
 
-#elif defined(__CC_PLATFORM_MAC)
-
-#pragma mark CCLayer - Mouse, Keyboard & Touch events
-
--(NSInteger) mouseDelegatePriority
-{
-	return 0;
-}
-
--(BOOL) isMouseEnabled
-{
-	return isMouseEnabled_;
-}
-
--(void) setIsMouseEnabled:(BOOL)enabled
-{
-	if( isMouseEnabled_ != enabled ) {
-		isMouseEnabled_ = enabled;
-
-		if( isRunning_ ) {
-			CCDirector *director = [CCDirector sharedDirector];
-			if( enabled )
-				[[director eventDispatcher] addMouseDelegate:self priority:[self mouseDelegatePriority]];
-			else
-				[[director eventDispatcher] removeMouseDelegate:self];
-		}
-	}
-}
-
--(NSInteger) keyboardDelegatePriority
-{
-	return 0;
-}
-
--(BOOL) isKeyboardEnabled
-{
-	return isKeyboardEnabled_;
-}
-
--(void) setIsKeyboardEnabled:(BOOL)enabled
-{
-	if( isKeyboardEnabled_ != enabled ) {
-		isKeyboardEnabled_ = enabled;
-
-		if( isRunning_ ) {
-			CCDirector *director = [CCDirector sharedDirector];
-			if( enabled )
-				[[director eventDispatcher] addKeyboardDelegate:self priority:[self keyboardDelegatePriority] ];
-			else
-				[[director eventDispatcher] removeKeyboardDelegate:self];
-		}
-	}
-}
-
--(NSInteger) touchDelegatePriority
-{
-	return 0;
-}
-
--(BOOL) isTouchEnabled
-{
-	return isTouchEnabled_;
-}
-
--(void) setIsTouchEnabled:(BOOL)enabled
-{
-	if( isTouchEnabled_ != enabled ) {
-		isTouchEnabled_ = enabled;
-		if( isRunning_ ) {
-			CCDirector *director = [CCDirector sharedDirector];
-			if( enabled )
-				[[director eventDispatcher] addTouchDelegate:self priority:[self touchDelegatePriority]];
-			else
-				[[director eventDispatcher] removeTouchDelegate:self];
-		}
-	}
-}
-
-
-#endif // Mac
-
-
 #pragma mark Layer - Callbacks
 -(void) onEnter
 {
-#ifdef __CC_PLATFORM_IOS
+
 	// register 'parent' nodes first
 	// since events are propagated in reverse order
 	if (isTouchEnabled_)
 		[self registerWithTouchDispatcher];
-
-#elif defined(__CC_PLATFORM_MAC)
-	CCDirector *director = [CCDirector sharedDirector];
-	CCEventDispatcher *eventDispatcher = [director eventDispatcher];
-
-	if( isMouseEnabled_ )
-		[eventDispatcher addMouseDelegate:self priority:[self mouseDelegatePriority]];
-
-	if( isKeyboardEnabled_)
-		[eventDispatcher addKeyboardDelegate:self priority:[self keyboardDelegatePriority]];
-
-	if( isTouchEnabled_)
-		[eventDispatcher addTouchDelegate:self priority:[self touchDelegatePriority]];
-
-#endif
 
 	// then iterate over all the children
 	[super onEnter];
@@ -234,10 +131,9 @@
 // Can't register mouse, touches here because of #issue #1018, and #1021
 -(void) onEnterTransitionDidFinish
 {
-#ifdef __CC_PLATFORM_IOS
+
 	if( isAccelerometerEnabled_ )
 		[[UIAccelerometer sharedAccelerometer] setDelegate:self];
-#endif
 
 	[super onEnterTransitionDidFinish];
 }
@@ -247,36 +143,20 @@
 {
 	CCDirector *director = [CCDirector sharedDirector];
 
-#ifdef __CC_PLATFORM_IOS
 	if( isTouchEnabled_ )
 		[[director touchDispatcher] removeDelegate:self];
 
 	if( isAccelerometerEnabled_ )
 		[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
 
-#elif defined(__CC_PLATFORM_MAC)
-	CCEventDispatcher *eventDispatcher = [director eventDispatcher];
-	if( isMouseEnabled_ )
-		[eventDispatcher removeMouseDelegate:self];
-
-	if( isKeyboardEnabled_ )
-		[eventDispatcher removeKeyboardDelegate:self];
-
-	if( isTouchEnabled_ )
-		[eventDispatcher removeTouchDelegate:self];
-
-#endif
-
 	[super onExit];
 }
 
-#ifdef __CC_PLATFORM_IOS
 -(BOOL) ccTouchBegan:(UITouch *)touch withEvent:(UIEvent *)event
 {
 	NSAssert(NO, @"Layer#ccTouchBegan override me");
 	return YES;
 }
-#endif
 @end
 
 #pragma mark -

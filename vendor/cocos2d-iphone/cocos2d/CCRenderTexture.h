@@ -31,9 +31,9 @@
 #import "Support/OpenGL_Internal.h"
 #import "kazmath/mat4.h"
 
-#ifdef __CC_PLATFORM_IOS
+
 #import <UIKit/UIKit.h>
-#endif // iPHone
+
 
 typedef enum
 {
@@ -128,12 +128,12 @@ typedef enum
  */
 -(BOOL)saveToFile:(NSString*)name format:(tCCImageFormat)format;
 
-#ifdef __CC_PLATFORM_IOS
+
 
 /* returns an autoreleased UIImage from the texture */
 -(UIImage *) getUIImage;
 
-#endif // __CC_PLATFORM_IOS
+
 
 @end
 

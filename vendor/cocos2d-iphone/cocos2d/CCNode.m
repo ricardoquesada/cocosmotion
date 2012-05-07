@@ -865,7 +865,6 @@ static NSUInteger globalOrderOfArrival = 1;
 
 // convenience methods which take a UITouch instead of CGPoint
 
-#ifdef __CC_PLATFORM_IOS
 
 - (CGPoint)convertTouchToNodeSpace:(UITouch *)touch
 {
@@ -881,7 +880,6 @@ static NSUInteger globalOrderOfArrival = 1;
 	return [self convertToNodeSpaceAR:point];
 }
 
-#endif // __CC_PLATFORM_IOS
 
 
 @end

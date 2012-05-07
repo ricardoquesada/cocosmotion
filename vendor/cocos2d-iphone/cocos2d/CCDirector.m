@@ -302,9 +302,7 @@ static CCDirector *_sharedDirector = nil;
 
 	if( view != view_ ) {
 	
-#ifdef __CC_PLATFORM_IOS
 		[super setView:view];
-#endif
 		[view_ release];
 		view_ = [view retain];
 

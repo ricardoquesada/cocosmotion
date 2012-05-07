@@ -25,9 +25,9 @@
 
 #import <Foundation/Foundation.h>
 #import "ccMacros.h"
-#ifdef __CC_PLATFORM_IOS
+
 #import <OpenGLES/ES2/gl.h>
-#endif // __CC_PLATFORM_IOS
+
 
 @class CCGLProgram;
 

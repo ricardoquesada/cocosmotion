@@ -25,9 +25,7 @@
 
 #import "ccMacros.h"
 
-#ifdef __CC_PLATFORM_IOS
 #import <UIKit/UIKit.h>		// Needed for UIDevice
-#endif
 
 #import "Platforms/CCGL.h"
 #import "CCConfiguration.h"
@@ -68,30 +66,15 @@ static char * glExtensions;
 }
 
 
-#ifdef __CC_PLATFORM_IOS
-#elif defined(__CC_PLATFORM_MAC)
-- (NSString*)getMacVersion
-{
-    SInt32 versionMajor, versionMinor, versionBugFix;
-	Gestalt(gestaltSystemVersionMajor, &versionMajor);
-	Gestalt(gestaltSystemVersionMinor, &versionMinor);
-	Gestalt(gestaltSystemVersionBugFix, &versionBugFix);
-
-	return [NSString stringWithFormat:@"%d.%d.%d", versionMajor, versionMinor, versionBugFix];
-}
-#endif // __CC_PLATFORM_MAC
-
 -(id) init
 {
 	if( (self=[super init])) {
 
 		// Obtain iOS version
 		OSVersion_ = 0;
-#ifdef __CC_PLATFORM_IOS
+
 		NSString *OSVer = [[UIDevice currentDevice] systemVersion];
-#elif defined(__CC_PLATFORM_MAC)
-		NSString *OSVer = [self getMacVersion];
-#endif
+
 		NSArray *arr = [OSVer componentsSeparatedByString:@"."];
 		int idx = 0x01000000;
 		for( NSString *str in arr ) {
@@ -110,31 +93,19 @@ static char * glExtensions;
 		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize_);
 		glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &maxTextureUnits_ );
 
-#ifdef __CC_PLATFORM_IOS
 		if( OSVersion_ >= kCCiOSVersion_4_0 )
 			glGetIntegerv(GL_MAX_SAMPLES_APPLE, &maxSamplesAllowed_);
 		else
 			maxSamplesAllowed_ = 0;
-#elif defined(__CC_PLATFORM_MAC)
-		glGetIntegerv(GL_MAX_SAMPLES, &maxSamplesAllowed_);
-#endif
 
 		supportsPVRTC_ = [self checkForGLExtension:@"GL_IMG_texture_compression_pvrtc"];
-#ifdef __CC_PLATFORM_IOS
 		supportsNPOT_ = YES;
-#elif defined(__CC_PLATFORM_MAC)
-		supportsNPOT_ = [self checkForGLExtension:@"GL_ARB_texture_non_power_of_two"];
-#endif
 		// It seems that somewhere between firmware iOS 3.0 and 4.2 Apple renamed
 		// GL_IMG_... to GL_APPLE.... So we should check both names
 
-#ifdef __CC_PLATFORM_IOS
 		BOOL bgra8a = [self checkForGLExtension:@"GL_IMG_texture_format_BGRA8888"];
 		BOOL bgra8b = [self checkForGLExtension:@"GL_APPLE_texture_format_BGRA8888"];
 		supportsBGRA8888_ = bgra8a | bgra8b;
-#elif defined(__CC_PLATFORM_MAC)
-		supportsBGRA8888_ = [self checkForGLExtension:@"GL_EXT_bgra"];
-#endif
 
 		supportsShareableVAO_ = [self checkForGLExtension:@"GL_APPLE_vertex_array_object"];
 

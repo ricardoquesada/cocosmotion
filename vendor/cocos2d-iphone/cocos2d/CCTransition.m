@@ -76,11 +76,9 @@ const NSInteger kSceneFade = 0xFADEFADE;
 
 		// disable events while transitions
 		CCDirector *director = [CCDirector sharedDirector];
-#ifdef __CC_PLATFORM_IOS
+
 		[[director touchDispatcher] setDispatchEvents: NO];
-#elif defined(__CC_PLATFORM_MAC)
-		[[director eventDispatcher] setDispatchEvents: NO];
-#endif
+
 
 		[self sceneOrder];
 	}
@@ -134,11 +132,8 @@ const NSInteger kSceneFade = 0xFADEFADE;
 	[director replaceScene: inScene_];
 
 	// enable events while transitions
-#ifdef __CC_PLATFORM_IOS
+
 	[[director touchDispatcher] setDispatchEvents: YES];
-#elif defined(__CC_PLATFORM_MAC)
-	[[director eventDispatcher] setDispatchEvents: YES];
-#endif
 
 	// issue #267
 	[outScene_ setVisible:YES];
