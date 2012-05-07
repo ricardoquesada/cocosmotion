@@ -5,7 +5,7 @@ Cocomotion
 
 ## This is probably not a best practice. 
 
-The first thing I noticed was that the bridge compiler for MacRuby/RubyMotion wouldn't traverse the subfolders for Platform/Support in Cocos2d. My banging-two-rocks together solution for now was to fork Cocos2d 2.0rc1 and move all iOS specific header files to the root lib folder. I also removed iOS-excluding #defines in case that was part of the problem too.
+The first thing I noticed was that the bridge compiler (gen_bridge_metadata) for MacRuby/RubyMotion wouldn't traverse the subfolders for Platform/Support in Cocos2d. My banging-two-rocks together solution for now was to fork Cocos2d 2.0rc1 and move all iOS specific header files to the root lib folder. I also removed iOS-excluding #defines in case that was part of the problem too.
 
 My fork that's currently vendored is [here](https://github.com/anydiem/cocos2d-iphone/tree/gles20)
 
